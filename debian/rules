@@ -1,0 +1,69 @@
+#!/usr/bin/make -f
+# -*- mode: makefile; coding: utf-8 -*-
+# Copyright © 2003-2004 Robert Jordens <rjo@gmx.de>
+# Copyright © 2010-2011, 2013, 2016-2017 Jonas Smedegaard <dr@jones.dk>
+# Description: Main Debian packaging script for liblrdf
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2, or (at
+# your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+DEB_AUTO_UPDATE_LIBTOOL = pre
+DEB_AUTO_UPDATE_AUTOCONF = ,
+DEB_AUTO_UPDATE_AUTOHEADER = ,
+DEB_AUTO_UPDATE_ACLOCAL = ,
+DEB_AUTO_UPDATE_AUTOMAKE = ,
+
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/rules/utils.mk
+
+# Recent d-shlibs needed for libraptor2-dev quirk
+CDBS_BUILD_DEPENDS +=, d-shlibs (>= 0.79~), ladspa-sdk, libraptor2-dev
+
+# put aside upstream-shipped temp files during build but after copyright-check
+DEB_UPSTREAM_CRUFT_MOVE = \
+ INSTALL \
+ Makefile.in \
+ aclocal.m4 \
+ config.guess \
+ config.h.in \
+ config.sub \
+ configure \
+ depcomp \
+ examples/Makefile.in \
+ install-sh \
+ libtool \
+ ltmain.sh \
+ m4/libtool.m4 \
+ m4/ltoptions.m4 \
+ m4/ltsugar.m4 \
+ m4/ltversion.m4 \
+ m4/lt~obsolete.m4 \
+ missing \
+ mkinstalldirs \
+ src/Makefile.in
+DEB_ACLOCAL_ARGS = -Im4 --install --force
+DEB_AUTOMAKE_ARGS = --add-missing --copy --foreign --force
+DEB_CONFIGURE_EXTRA_FLAGS += '--libdir=$${prefix}/lib/$(DEB_HOST_MULTIARCH)'
+clean::
+	rm -f compile stamp-h
+
+binary-post-install/liblrdf0::
+	d-shlibmove --commit --multiarch \
+		--movedev "debian/tmp/usr/include/*" usr/include/ \
+		--movedev "debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/*.pc" usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/ \
+		--moveshl debian/tmp/usr/share/ladspa/rdf/ladspa.rdfs usr/share/ladspa/rdf/ \
+		debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/liblrdf.so
+
+binary-predeb/liblrdf0-dev::
+	find debian/liblrdf0-dev/ -type f -name '*.la' -delete

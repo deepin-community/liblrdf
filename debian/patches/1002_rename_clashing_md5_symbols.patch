@@ -1,0 +1,26 @@
+Description: Fix symbol conflicts with other MD5 implementations.
+ Exporting symbols like MD5_Init() is not a good idea.
+ .
+ This avoids issues like with former lowercased functions, which caused
+ crashes when initializing the GStreamer when the LADSPA plugin is
+ installed (which should be the case in all installations).  Essentially
+ this made pidgin, empathy, totem and a lot of other applications
+ unusable.
+Author: Sebastian Dröge <slomo@debian.org>
+Bug-Debian: https://bugs.debian.org/521898
+Last-Updated: 2017-01-09
+
+--- a/src/md5.h
++++ b/src/md5.h
+@@ -28,6 +28,11 @@
+ #elif !defined(_MD5_H)
+ #define _MD5_H
+ 
++/* Change function names to prevent symbol conflicts */
++#define MD5_Init _lrdf_MD5_Init
++#define MD5_Update _lrdf_MD5_Update
++#define MD5_Final _lrdf_MD5_Final
++
+ /* Any 32-bit or wider unsigned integer data type will do */
+ typedef unsigned int MD5_u32plus;
+ 

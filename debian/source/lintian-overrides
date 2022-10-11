@@ -1,0 +1,18 @@
+# License is in License-Reference field (see bug#786450)
+missing-license-text-in-dep5-copyright
+
+# License is in License-Reference field (see bug#786450)
+missing-license-paragraph-in-dep5-copyright
+
+# upstream-shipped autotools files are moved aside during build
+source-contains-unsafe-symlink config.guess
+source-contains-unsafe-symlink config.sub
+source-contains-unsafe-symlink depcomp
+source-contains-unsafe-symlink install-sh
+source-contains-unsafe-symlink ltmain.sh
+source-contains-unsafe-symlink missing
+source-contains-unsafe-symlink m4/libtool.m4
+source-contains-unsafe-symlink m4/ltoptions.m4
+source-contains-unsafe-symlink m4/ltsugar.m4
+source-contains-unsafe-symlink m4/ltversion.m4
+source-contains-unsafe-symlink m4/lt~obsolete.m4

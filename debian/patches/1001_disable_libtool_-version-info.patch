@@ -1,0 +1,13 @@
+Description: reset SONAME to 0
+ There was no need to change it need.  Would break everything.
+Author: Robert Jordens <jordens@debian.org>
+Last-Updated: 2004-03-25
+
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -5,4 +5,4 @@
+ 
+ liblrdf_la_SOURCES = lrdf.c lrdf_multi.c md5.c
+ liblrdf_la_LIBADD = @RAPTOR_LIBS@
+-liblrdf_la_LDFLAGS = -version-info @LRDF_LIBTOOL_VERSION@
++#liblrdf_la_LDFLAGS = -version-info @LRDF_LIBTOOL_VERSION@
